@@ -9,7 +9,6 @@ MAINTAINER rbravo@datiobd.com
 ADD pymesos/ /pymesos/
 # copy the contents of the `app/` folder into the container at build time
 ADD app/ /app/
-ADD app2/config /app2/config
 
 #run commands:
 RUN apt-get update && apt-get install -y python3 python-dev python3-dev python-pip libzookeeper-mt-dev \ 
