@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y python3 python-dev python3-dev python-p
 
 RUN chmod a+x /app/scheduler.sh
 
-ENV MASTER 172.17.0.5
-ENV DOCKER_TASK cirobarradov/executor-app
+#ENV MASTER 172.17.0.5
+#ENV DOCKER_TASK cirobarradov/executor-app
 
 # CMD source /venv/bin/activate
