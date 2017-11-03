@@ -1,0 +1,2 @@
+# MinimalScheduler
+sample mesos scheduler
