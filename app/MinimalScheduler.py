@@ -13,45 +13,57 @@ from os.path import abspath, join, dirname
 from pymesos import MesosSchedulerDriver, Scheduler, encode_data
 from addict import Dict
 
-TASK_CPU = 0.1
-TASK_MEM = 32
-EXECUTOR_CPUS = 0.1
-EXECUTOR_MEM = 32
+TASK_CPU = 0.5
+TASK_MEM = 100
+#EXECUTOR_CPUS = 1
+#EXECUTOR_MEM = 100
 TERMINAL_STATES = ["TASK_FINISHED","TASK_FAILED","TASK_KILLED","TASK_ERROR","TASK_LOST"]
 DOCKER_TASK= 'cirobarradov/executor-app'
 
 class MinimalScheduler(Scheduler):
 
-    def __init__(self, executor):
-        self.executor = executor
+    def __init__(self):
+        #self.executor = executor
+        self._message="localhost sample keyRegresion"
 
     def resourceOffers(self, driver, offers):
         filters = {'refuse_seconds': 5}
 
         for offer in offers:
-            cpus = self.getResource(offer.resources, 'cpus')
-            mem = self.getResource(offer.resources, 'mem')
-            if cpus < TASK_CPU or mem < TASK_MEM:
-                continue
+            try:
+                cpus = self.getResource(offer.resources, 'cpus')
+                mem = self.getResource(offer.resources, 'mem')
+                if cpus < TASK_CPU or mem < TASK_MEM:
+                    continue
 
-            task = Dict()
-            task_id = str(uuid.uuid4())
-            task.task_id.value = task_id
-            task.agent_id.value = offer.agent_id.value
-            task.name = 'task {}'.format(task_id)
-            task.executor= self.executor
-            task.container.type = 'DOCKER'
-            task.container.docker.image = DOCKER_TASK #os.getenv('DOCKER_TASK')
-            task.container.docker.network = 'HOST'
-            task.container.docker.force_pull_image = True
+                task = Dict()
+                task_id = str(uuid.uuid4())
+                task.task_id.value = task_id
+                task.agent_id.value = offer.agent_id.value
+                task.name = 'task {}'.format(task_id)
+                #task.executor= self.executor
+                task.container.type = 'DOCKER'
+                task.container.docker.image = DOCKER_TASK #os.getenv('DOCKER_TASK')
+                task.container.docker.network = 'HOST'
+                task.container.docker.force_pull_image = True
 
-            task.resources = [
-                dict(name='cpus', type='SCALAR', scalar={'value': TASK_CPU}),
-                dict(name='mem', type='SCALAR', scalar={'value': TASK_MEM}),
-            ]
+                task.command.shell = True
+                task.command.value = '/app/task.sh ' + self._message+str(uuid.uuid4())
+                # task.container.type = 'DOCKER'
+                # task.container.docker.image = DOCKER_TASK #os.getenv('DOCKER_TASK')
+                # task.container.docker.network = 'HOST'
+                # task.container.docker.force_pull_image = True
 
-            driver.launchTasks(offer.id, [task], filters)
+                task.resources = [
+                    dict(name='cpus', type='SCALAR', scalar={'value': TASK_CPU}),
+                    dict(name='mem', type='SCALAR', scalar={'value': TASK_MEM}),
+                ]
 
+                driver.launchTasks(offer.id, [task], filters)
+            except Exception as e:
+                logging.info(str(e))
+                driver.declineOffer(offer.id, filters)
+            pass
     def getResource(self, res, name):
         for r in res:
             if r.name == name:
@@ -75,17 +87,17 @@ class MinimalScheduler(Scheduler):
 
 
 def main(master):
-    executor = Dict()
-    executor.executor_id.value = 'MinimalExecutor'
-    executor.name = executor.executor_id.value
-    executor.command.value = '%s %s' % (
-        sys.executable,
-        abspath(join(dirname(__file__), 'executor.py'))
-    )
-    executor.resources = [
-        dict(name='mem', type='SCALAR', scalar={'value': EXECUTOR_MEM}),
-        dict(name='cpus', type='SCALAR', scalar={'value': EXECUTOR_CPUS}),
-    ]
+    # executor = Dict()
+    # executor.executor_id.value = 'MinimalExecutor'
+    # executor.name = executor.executor_id.value
+    # executor.command.value = '%s %s' % (
+    #     sys.executable,
+    #     abspath(join(dirname(__file__), 'executor.py'))
+    # )
+    # executor.resources = [
+    #     dict(name='mem', type='SCALAR', scalar={'value': EXECUTOR_MEM}),
+    #     dict(name='cpus', type='SCALAR', scalar={'value': EXECUTOR_CPUS}),
+    # ]
 
     framework = Dict()
     framework.user = getpass.getuser()
@@ -93,7 +105,7 @@ def main(master):
     framework.hostname = socket.gethostname()
 
     driver = MesosSchedulerDriver(
-        MinimalScheduler(executor),
+        MinimalScheduler(),
         framework,
         master,
         use_addict=True,
