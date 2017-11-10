@@ -3,9 +3,9 @@ FROM bitnami/minideb:jessie
 MAINTAINER rbravo@datiobd.com
 
 #ENVIRONMENT VARIABLES
-ENV master 
-ENV redis_server
-ENV redis_key
+ENV master=localhost
+ENV redis_server=localhost
+ENV redis_key=key
 
 # copy the contents of the `app/` folder into the container at build time
 ADD pymesos/ /pymesos/
