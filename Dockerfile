@@ -37,4 +37,4 @@ RUN apt-get update && apt-get install -y python3 python-dev python3-dev python-p
     && rm -rf /usr/share/doc/*
 
 RUN chmod a+x /app/scheduler.sh
-ENTRYPOINT ["/app/scheduler.sh","master","redis_server","redis_key"]
+ENTRYPOINT ["/app/scheduler.sh","$master","$redis_server","$redis_key"]
