@@ -2,8 +2,10 @@ FROM bitnami/minideb:jessie
  
 MAINTAINER rbravo@datiobd.com
 
-# expose port
-#EXPOSE $PORTS
+#ENVIRONMENT VARIABLES
+ENV master 
+ENV redis_server
+ENV redis_key
 
 # copy the contents of the `app/` folder into the container at build time
 ADD pymesos/ /pymesos/
@@ -35,4 +37,4 @@ RUN apt-get update && apt-get install -y python3 python-dev python3-dev python-p
     && rm -rf /usr/share/doc/*
 
 RUN chmod a+x /app/scheduler.sh
-ENTRYPOINT ["/app/scheduler.sh"]
+ENTRYPOINT ["/app/scheduler.sh","master","redis_server","redis_key"]
