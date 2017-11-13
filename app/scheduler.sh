@@ -1,4 +1,4 @@
 #!/bin/bash
 
 . /venv/bin/activate
-exec python /app/MinimalScheduler.py $1 $2 $3
+exec python /app/MinimalScheduler.py "$@"
