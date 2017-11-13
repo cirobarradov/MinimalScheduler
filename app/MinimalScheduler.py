@@ -1,15 +1,12 @@
 from __future__ import print_function
 
-import os
 import sys
-import uuid
 import time
 import socket
 import signal
 import getpass
 from threading import Thread
 import redis
-from os.path import abspath, join, dirname
 
 from pymesos import MesosSchedulerDriver, Scheduler, encode_data
 from addict import Dict
@@ -106,10 +103,14 @@ class MinimalScheduler(Scheduler):
                 except Exception as e:
                     logging.error(str(e))
         else:
-            logging.debug('Status update TID %s %s %s',
+            logging.debug('######\n Status update: \n task_id: %s \n task_state: %s \n source: %s \n '
+                          'agent_id %s \n executor_id %s \n container_status %s \n ######',
                       update.task_id.value,
                       update.state,
-                      update)
+                      update.source,
+                      update.agent_id,
+                      update.executor_id,
+                      update.container_status)
 
     # get resource from offer given the name of the resource
     def getResource(self, res, name):
