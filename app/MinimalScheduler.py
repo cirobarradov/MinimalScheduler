@@ -12,9 +12,9 @@ from pymesos import MesosSchedulerDriver, Scheduler, encode_data
 from addict import Dict
 
 TERMINAL_STATES = ["TASK_FINISHED","TASK_FAILED","TASK_KILLED","TASK_ERROR","TASK_LOST"]
-DOCKER_TASK= 'cirobarradov/executor-app'
-TASK_CPU = 0.5
-TASK_MEM = 100
+#DOCKER_TASK= 'cirobarradov/executor-app'
+#TASK_CPU = 0.5
+#TASK_MEM = 100
 
 class MinimalScheduler(Scheduler):
 
