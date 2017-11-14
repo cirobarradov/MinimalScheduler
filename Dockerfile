@@ -6,7 +6,9 @@ MAINTAINER rbravo@datiobd.com
 ENV master=localhost
 ENV redis_server=localhost
 ENV redis_key=key
-
+ENV docker_task=cirobarradov/executor-app
+ENV task_cpu=0.5
+ENV task_mem=100
 # copy the contents of the `app/` folder into the container at build time
 ADD pymesos/ /pymesos/
 # copy the contents of the `app/` folder into the container at build time
@@ -39,4 +41,4 @@ RUN apt-get update && apt-get install -y python3 python-dev python3-dev python-p
 RUN chmod a+x /app/scheduler.sh
 #CMD ["sh", "-c", "echo ${master}"]
 #ENTRYPOINT ["/app/scheduler.sh","${master}","${redis_server}","${redis_key}"]
-CMD ["sh", "-c", "/app/scheduler.sh $master $redis_server $redis_key"]
+CMD ["sh", "-c", "/app/scheduler.sh $master $redis_server $redis_key $docker_Task $task_cpu $task_mem"]
