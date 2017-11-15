@@ -156,11 +156,6 @@ def main(master, redis_server, redis_key, docker_task, task_cpu, task_mem):
 if __name__ == '__main__':
     import logging
     logging.basicConfig(level=logging.DEBUG)
-    print (sys.argv[4])
-    print(sys.argv[5])
-    print ("hola")
-    print(sys.argv[6])
-    print("adios")
     if len(sys.argv) <= 4:
         print("Usage: {} <mesos_master_ip> <redis_server> <redis_key> <docker_task> <task_cpu> <task_mem>".format(sys.argv[0]))
         sys.exit(1)
