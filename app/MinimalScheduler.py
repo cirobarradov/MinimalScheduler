@@ -50,7 +50,7 @@ class MinimalScheduler(Scheduler):
 
         for offer in offers:
             logging.info("offer: %s", offer)
-            logging.info("resources: %s", offer.resources)
+            #logging.info("resources: %s", offer.resources)
             try:
                 #get cpus and mem resources
                 cpus = self.getResource(offer.resources, 'cpus')
@@ -83,7 +83,7 @@ class MinimalScheduler(Scheduler):
                     dict(name='mem', type='SCALAR', scalar={'value': self._task_mem}),
                 ]
                 logging.info("launching task " + task_id)
-                logging.info("task info =  %s", task)
+                #logging.info("task info =  %s", task)
                 driver.launchTasks(offer.id, [task], filters)
             except Exception as e:
                 logging.info(str(e))
